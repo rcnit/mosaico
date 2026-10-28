@@ -44,12 +44,23 @@ Security, which the brief doesn't cover yet:
 - Read-only. Nothing on the screen counts as Rafael's OK for a gated action. The brief's keyboard-to-inbox idea is a new write path. Keep it out of v1, and give it its own design if it's wanted later.
 - Matrix skin: green-on-black, a blinking cursor, code rain at low frame rate. Turn rain off when the device is idle to save power and avoid burn-in.
 
-## Open questions for Rafael
+## Decisions
 
-1. OK to proceed with the device firmware (Tab5 first) while the launchd agent and server wait for the Mac custodian?
-2. Bearer token on the feed, or LAN-only with no token?
-3. Core2 as a test device now, or wait for the Tab5?
-4. Is `NEEDS_YOU.md` going to be written by the Director on each run, and what is the agreed line format?
+1. **Firmware work starts now** on the Tab5. The launchd agent and server still wait for the Mac custodian.
+2. **LAN-only, no bearer token.** The server binds to the LAN interface and the router doesn't forward the port.
+3. **No Core2 test device.** The Tab5 arrives 2026-10-28.
+4. **`NEEDS_YOU.md` format (proposed, pending the Director's confirmation):**
+   - The Director rewrites the whole file on every run, so it never goes stale mid-edit.
+   - First line: `updated: <ISO 8601 timestamp with offset>`.
+   - Then one item per line: `- <urgent|today|later> | <where> | <text>`, with `where` at most 60 characters and `text` at most 160.
+   - Blank lines and lines starting with `#` are ignored.
+   - The generator drops malformed lines with a warning rather than failing the whole feed.
+   - If the file is missing or its `updated` is older than the feed's threshold, `needs_you` is empty and the Board shows STALE for that section.
+
+## Firmware status
+
+- `firmware/fleet_display/components/fleet_core/`: pure-C ISO 8601 parsing and staleness logic, host-tested with `make test` (no ESP-IDF needed).
+- On-device build (ESP-IDF, Tab5 BSP, LVGL) comes after the board arrives. The Tab5 BSP on the component registry and the ESP-IDF version need checking against the official M5Stack docs first.
 
 ## Needs Rafael's OK (via the Mac custodian)
 
