@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fleet.schema.json",
+  "title": "Fleet feed v1",
+  "description": "Contract between the feed generator (Mac) and the ESP32 display. The generator fails closed: it must not publish a file that does not validate against this schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "generated_at", "clocks", "needs_you", "sessions", "decisions_recent", "pending", "ledger_tail", "counts"],
+  "properties": {
+    "schema": { "const": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "clocks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lisbon", "brt"],
+      "properties": {
+        "lisbon": { "type": "string", "maxLength": 12 },
+        "brt": { "type": "string", "maxLength": 12 }
+      }
+    },
+    "needs_you": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["text", "where", "urgent"],
+        "properties": {
+          "text": { "type": "string", "maxLength": 160 },
+          "where": { "type": "string", "maxLength": 60 },
+          "urgent": { "type": "boolean" }
+        }
+      }
+    },
+    "sessions": {
+      "type": "array",
+      "maxItems": 40,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "group", "state", "line"],
+        "properties": {
+          "name": { "type": "string", "maxLength": 40 },
+          "group": { "type": "string", "maxLength": 40 },
+          "state": { "enum": ["running", "waiting", "idle", "draft", "held"] },
+          "line": { "type": "string", "maxLength": 120 }
+        }
+      }
+    },
+    "decisions_recent": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}-\\d+$" },
+          "title": { "type": "string", "maxLength": 120 }
+        }
+      }
+    },
+    "pending": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "type": "string", "maxLength": 160 }
+    },
+    "ledger_tail": {
+      "type": "array",
+      "maxItems": 15,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["t", "who", "what"],
+        "properties": {
+          "t": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" },
+          "who": { "type": "string", "maxLength": 40 },
+          "what": { "type": "string", "maxLength": 160 }
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decisions", "sessions_live"],
+      "properties": {
+        "decisions": { "type": "integer", "minimum": 0 },
+        "sessions_live": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

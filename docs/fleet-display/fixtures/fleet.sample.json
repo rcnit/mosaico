@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "generated_at": "2026-10-28T13:10:00Z",
+  "clocks": {"lisbon": "WET", "brt": "UTC-3"},
+  "needs_you": [
+    {"text": "Sample item waiting on a reply", "where": "Sample session", "urgent": true},
+    {"text": "Sample routine item", "where": "Sample session", "urgent": false}
+  ],
+  "sessions": [
+    {"name": "Sample A", "group": "Executives", "state": "running", "line": "Synthetic row for testing"},
+    {"name": "Sample B", "group": "Theory", "state": "idle", "line": "Synthetic row for testing"}
+  ],
+  "decisions_recent": [
+    {"id": "2026-10-28-000", "title": "Synthetic decision title"}
+  ],
+  "pending": ["Synthetic pending item"],
+  "ledger_tail": [
+    {"t": "13:02", "who": "Sample", "what": "Synthetic ledger line"}
+  ],
+  "counts": {"decisions": 0, "sessions_live": 2}
+}
